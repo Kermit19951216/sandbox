@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd ">
+	
+	<context:annotation-config />
+	
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	
+	<context:component-scan base-package="com.sandbox.."/>
+	
+	<context:component-scan base-package="test.com.sandbox.."/>
+	
+	<context:component-scan base-package="com.sandbox.sandbox.model"></context:component-scan> 
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" scope="singleton" destroy-method="close">
+	    <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql:///sandbox?characterEncoding=UTF-8"></property>
+        <property name="user" value="root"></property>
+        <property name="password" value="root"></property>
+        <property name="maxPoolSize" value="20"/>
+        <property name="minPoolSize" value="5"/>
+        <!-- 初始化建立的连接数 -->
+        <property name="initialPoolSize" value="10"/>
+        <!-- 最大空闲时间，120秒内未被使用的连接将被丢弃 -->
+        <property name="maxIdleTime" value="120"/>
+        <!-- 当连接池耗尽，且未达到最大连接数时，一次获取的连接数 -->
+        <property name="acquireIncrement" value="2"/>
+        <!-- 空闲检查时间间隔， 每隔120秒检查连接池里的空闲连接 ，单位是秒-->
+        <property name="idleConnectionTestPeriod" value="60"/>   
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" destroy-method="destroy">
+	    <property name="dataSource" ref="dataSource"/>
+	    <property name="annotatedClasses">
+	      <list>
+	        <value>com.sandbox.sandbox.model.Item</value>
+	        <value>com.sandbox.sandbox.model.User</value>
+	        <value>com.sandbox.sandbox.model.MenuItem</value>
+	        <value>com.sandbox.sandbox.model.Admin</value>
+	        <value>com.sandbox.sandbox.model.AnalysisModel</value>
+	      </list>
+	    </property>
+	    <property name="hibernateProperties">
+	        <props>
+	            <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+	            <prop key="hibernate.show_sql">true</prop>
+	            <prop key="hibernate.format_sql">true</prop>
+	            <prop key="hibernate.hbm2dll.auto">create</prop>
+	            <prop key="hibernate.connection.autocommit">true</prop>  
+	        </props>
+	    </property>
+	</bean>
+	
+	<bean id="test" class="com.sandbox.sandbox.test.action.testAction">
+	</bean>
+	
+	<bean id="testdao" class="com.sandbox.sandbox.dao.Impl.testdaoImpl">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	 <!--配置事务管理器类-->
+    <bean id="txManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <!--配置事务增强-->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="*" read-only="false"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--aop配置-->
+    <aop:config>
+        <aop:pointcut id="pt" expression="execution(* com.sandbox.sandbox.service.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pt"/>
+    </aop:config>
+
+</beans>

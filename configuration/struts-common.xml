@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+ "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+ "http://struts.apache.org/dtds/struts-2.0.dtd">
+ <struts>
+     <package name="sandbox-common" namespace="/" extends="json-default">
+         <default-action-ref name="index" />
+         <global-exception-mappings><!-- 全局异常处理 -->
+			<exception-mapping result="error" exception="java.lang.NullPointerException" />
+			<exception-mapping result="error" exception="java.lang.NoSuchMethodException" />
+			<exception-mapping result="error" exception="java.lang.Exception" />
+		</global-exception-mappings>
+		
+		<action name="index" class="com.sandbox.common.action.IndexAction">
+		    <result name="index">jsp/index.jsp</result>
+		</action>
+		
+		<action name="test" class="com.sandbox.common.action.IndexAction" method="test">
+		    <result name="test">jsp/index_admin.jsp</result>
+		</action>
+		
+    </package>
+ </struts>

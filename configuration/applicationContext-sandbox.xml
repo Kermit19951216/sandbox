@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.5.xsd ">
+	
+	<context:annotation-config/>
+	
+	<context:component-scan base-package="com.sandbox.."/>
+	
+	<context:component-scan base-package="com.sandbox.sandbox.dao.Impl"/>
+	
+	<context:component-scan base-package="com.sandbox.sandbox.service.Impl"/>
+	
+	<bean id="BaseDao" class="com.sandbox.sandbox.dao.Impl.BaseDaoImpl" scope="prototype" abstract="true">
+	    <property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="UserDao" class="com.sandbox.sandbox.dao.Impl.UserDaoImpl" parent="BaseDao">
+	</bean>
+	
+	<bean id="ItemDao" class="com.sandbox.sandbox.dao.Impl.ItemDaoImpl" parent="BaseDao">
+	</bean>
+	
+	<bean id="MenuItemDao" class="com.sandbox.sandbox.dao.Impl.MenuItemDaoImpl" parent="BaseDao">
+	</bean>
+	
+	<bean id="AdminDao" class="com.sandbox.sandbox.dao.Impl.AdminDaoImpl" parent="BaseDao">
+	</bean>
+	
+	<bean id="AnalysisModelDao" class="com.sandbox.sandbox.dao.Impl.AnalysisModelDaoImpl" parent="BaseDao">
+	</bean>
+	
+	<bean id="BaseService" class="com.sandbox.sandbox.service.Impl.BaseServiceImpl" abstract="true">
+	</bean>
+	
+	<bean id="UserService" class="com.sandbox.sandbox.service.Impl.UserServiceImpl" parent="BaseService">
+	</bean>
+	
+	<bean id="ItemService" class="com.sandbox.sandbox.service.Impl.ItemServiceImpl" parent="BaseService">
+	</bean>
+	
+	<bean id="MenuItemService" class="com.sandbox.sandbox.service.Impl.MenuItemServiceImpl" parent="BaseService">
+	</bean>
+	
+	<bean id="AdminService" class="com.sandbox.sandbox.service.Impl.AdminServiceImpl" parent="BaseService">
+	</bean>
+	
+	<bean id="AnalysisModelService" class="com.sandbox.sandbox.service.Impl.AnalysisModelServiceImpl" parent="BaseService">
+	</bean>
+	
+	<bean id="BaseAction" class="com.sandbox.sandbox.action.BaseAction" abstract="true"></bean>
+	
+	<bean id="UserAction" class="com.sandbox.sandbox.action.UserAction" scope="prototype" parent="BaseAction"></bean>
+	
+	<bean id="AuthenticationInterceptor" class="com.sandbox.sandbox.interceptor.AuthenticationInterceptor"></bean>
+	
+</beans>

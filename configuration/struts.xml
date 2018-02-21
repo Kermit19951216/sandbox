@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+ "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+ "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+    <constant name="struts.devMode" value="true"/>
+    <!-- <constant name="struts.objectFactory.spring.autoWire" value="name"></constant> -->
+    <constant name="struts.objectFactory" value="spring" /> 
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	<constant name="struts.multipart.maxSize" value="1048576000"/>
+    <include file="struts-test.xml"/>
+    <include file="struts-common.xml"/>
+    <include file="struts-sandbox.xml"/>
+</struts> 
