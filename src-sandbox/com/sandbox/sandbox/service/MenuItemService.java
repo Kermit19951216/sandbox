@@ -10,4 +10,5 @@ public interface MenuItemService extends BaseService<MenuItem, Integer> {
 	public abstract List<MenuItem> list(User user);
 	
 	public abstract List<MenuItem> listAll();
+	
 }

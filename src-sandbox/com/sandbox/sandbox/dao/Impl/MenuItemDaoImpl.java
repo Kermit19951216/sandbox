@@ -21,9 +21,8 @@ public class MenuItemDaoImpl extends BaseDaoImpl<MenuItem, Integer> implements M
 		Session session = sessionFactory.openSession();
 		try{
 			Set<String> nameset = new HashSet<>();
-			Iterator<Item> it = user.getItems().iterator();
-			while(it.hasNext()){
-				nameset.add(it.next().getName());
+			for(Item item:user.getItems()){
+				nameset.add(item.getName());
 			}
 			Query query = session.createQuery("from MenuItem mi where mi.name not in (:nameset)");
 			query.setParameterList("nameset", nameset);

@@ -59,7 +59,11 @@ public class UserAction extends BaseAction<User> {
 				System.out.println(list.size());
 				//System.out.println(list.get(0));
 				if(list.size()>0){
+					for(MenuItem item :list){
+						System.out.println("##### "+item);
+					}
 					session.put("MenuItem", list);
+					//session.put("MenuItem", list);
 				}
 			}else{
 				List<MenuItem> list = sandboxMenuItemService.listAll();
@@ -70,7 +74,7 @@ public class UserAction extends BaseAction<User> {
 			}
 		}
 		location = (String)session.get("location");
-		if(location==null){
+		if(location!=null){
 			System.out.println("location"+location);
 			return "itemlogin";
 		}else{
@@ -135,10 +139,11 @@ public class UserAction extends BaseAction<User> {
 			List<Item> list = JsonUtil.toBean(jsonstr, Item.class);
 			user.getItems().clear();
 			for(Item i:list){
-				String[] str = i.getPicname().split("../img/");
+				String[] str = i.getPicname().split("img/sandbox/");
+				System.out.println(str[1]+" ###  ");
 				i.setPicname(str[1]);
-				//Integer id = sandboxItemService.create(i);
-				//i.setId(id);
+				Integer id = sandboxItemService.create(i);
+				i.setId(id);
 				logger.debug("user-Save用户参数{}",i);
 				user.getItems().add(i);
 			}
@@ -146,7 +151,7 @@ public class UserAction extends BaseAction<User> {
 			// TODO: handle exception
 			e.printStackTrace();
 		}finally {
-			//sandboxUserService.update(user);
+			sandboxUserService.update(user);
 		}
 		location = (String)session.get("location");
 		if(location.length()>0){
